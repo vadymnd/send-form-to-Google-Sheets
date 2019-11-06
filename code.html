@@ -1,0 +1,36 @@
+<script>
+  (async () => {
+      let ipFetch = await fetch('https://geoip-db.com/json/');
+      let ipData = await ipFetch.json();            
+
+      function sendData(e) {
+          let clientCountry = e.target.querySelector('.country-select').value;
+          let clientName = e.target.querySelector('[name="name"]').value;
+          let clientPhone = e.target.querySelector('[name="phone"]').value;
+          let clientIP = ipData.IPv4;
+          let countryIP = ipData.country_name;
+          const http = new XMLHttpRequest();
+          const url = "https://script.google.com/a/macros/s/____________________________________/exec"; // ссылка на скрипт из google sheets
+          const params = "p1=" + clientCountry + "&p2=" + clientName + "&p3=" + clientPhone + "&p4=" + clientIP + "&p5=" + countryIP + "&p99=" + Math.random();
+          http.open("GET", url + "?" + params, true);
+          http.send();
+      }
+      document.addEventListener('submit', sendData);
+  })();
+</script>
+
+<!-- Код на google sheets -->
+<script>
+function doGet(e){
+  var sheet = SpreadsheetApp.openById("_____________________________"); // id из адресной строки 
+  var n=sheet.getRange("A1").getValue()+2;
+  var d = new Date(); 
+  sheet.getRange("A"+n).setValue(d);
+  sheet.getRange("B"+n).setValue(e.parameter.p1);
+  sheet.getRange("C"+n).setValue(e.parameter.p2);
+  sheet.getRange("D"+n).setValue(e.parameter.p3);
+  sheet.getRange("E"+n).setValue(e.parameter.p4);
+  sheet.getRange("F"+n).setValue(e.parameter.p5);
+  sheet.getRange("A1").setValue(n-1);
+};
+</script>
